@@ -7,7 +7,7 @@
     <title>ChatGPT For Notion Embedding</title>
 </head>
 <script>
-async function query(apikey) {
+async function query(apikey, prompt) {
     let chatReqeust = 'https://api.openai.com/v1/chat/completions'
     return await fetch(
         chatReqeust,
@@ -16,32 +16,41 @@ async function query(apikey) {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + apikey
-            }
-        },
-        {
+            },
             body: JSON.stringify({
                 "model": "gpt-3.5-turbo",
-                "messages": [{"role": "user", "content": "Hello!"}]
+                "messages": [{"role": "user", "content": prompt}]
             })
         }
     )
     .then((response) => {
-        return response.text();
+        return response.json();
     });
 }
 
-function extractKeywords() {
-    let apikey = document.querySelector("#apikey");
-    console.log("data:" + query(apikey));
+async function extractKeywords() {
+    let newLine = "\n\n";
+    let apikey = document.querySelector("#apikey").value;
+    let itemDescription = document.querySelector("#item-description").value;
+    let promptForKeywordExtraction = "Read below Product Description and extract 3 keywords without explanation."
+    promptForKeywordExtraction = promptForKeywordExtraction + newLine + itemDescription;
+    let response = await query(apikey, promptForKeywordExtraction);
+    document.querySelector("#keywords").innerHTML = response.choices[0].message.content;
 }
 </script>
 <body>
     <form action="#">
-        <label for="apikey">API KEY</label>
-        <input type="text" name="apikey" id="apikey">
-        <label for="item-description">아이템 설명</label>
-        <textarea name="item-description" id="item-description" cols="30" rows="10"></textarea>
-        <button type="button" onclick="extractKeywords()">키워드 추출</button>
+        <div>
+            <div>API KEY</div>
+            <input type="text" name="apikey" id="apikey" value="">
+        </div>
+        <div>
+            <div></div>아이템 설명</div>
+            <textarea name="item-description" id="item-description" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <button type="button" onclick="extractKeywords()">키워드 추출</button>
+        </div>
         <div id="keywords"></div>
     </form>
 </body>
