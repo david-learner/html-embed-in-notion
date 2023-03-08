@@ -7,7 +7,7 @@
     <title>ChatGPT For Notion Embedding</title>
 </head>
 <script>
-async function query() {
+async function query(apikey) {
     let chatReqeust = 'https://api.openai.com/v1/chat/completions'
     return await fetch(
         chatReqeust,
@@ -15,7 +15,7 @@ async function query() {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer XaeDnmPcKRneh0nIYFo2T3BlbkFJO1eDRY9YzqIX0qdFLHI5"
+                "Authorization": "Bearer " + apikey
             }
         },
         {
@@ -30,13 +30,18 @@ async function query() {
     });
 }
 
-console.log("data:" + query());
+function extractKeywords() {
+    let apikey = document.querySelector("#apikey");
+    console.log("data:" + query(apikey));
+}
 </script>
 <body>
     <form action="#">
+        <label for="apikey">API KEY</label>
+        <input type="text" name="apikey" id="apikey">
         <label for="item-description">아이템 설명</label>
         <textarea name="item-description" id="item-description" cols="30" rows="10"></textarea>
-        <button type="button">키워드 추출</button>
+        <button type="button" onclick="extractKeywords()">키워드 추출</button>
         <div id="keywords"></div>
     </form>
 </body>
