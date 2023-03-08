@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT For Notion Embedding</title>
+</head>
+<script>
+async function query() {
+    let chatReqeust = 'https://api.openai.com/v1/chat/completions'
+    return await fetch(
+        chatReqeust,
+        {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer XaeDnmPcKRneh0nIYFo2T3BlbkFJO1eDRY9YzqIX0qdFLHI5"
+            }
+        },
+        {
+            body: JSON.stringify({
+                "model": "gpt-3.5-turbo",
+                "messages": [{"role": "user", "content": "Hello!"}]
+            })
+        }
+    )
+    .then((response) => {
+        return response.text();
+    });
+}
+
+console.log("data:" + query());
+</script>
+<body>
+    <form action="#">
+        <label for="item-description">아이템 설명</label>
+        <textarea name="item-description" id="item-description" cols="30" rows="10"></textarea>
+        <button type="button">키워드 추출</button>
+        <div id="keywords"></div>
+    </form>
+</body>
+</html>
